@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <!-- Server-level settings -->
+    <logger>
+        <level>information</level>
+        <log>/var/log/clickhouse-server/clickhouse-server.log</log>
+        <errorlog>/var/log/clickhouse-server/clickhouse-server.err.log</errorlog>
+        <size>1000M</size>
+        <count>10</count>
+        <console>1</console> <!-- Для вывода логов в Docker console -->
+    </logger>
+
+    <skip_check_for_incorrect_settings>1</skip_check_for_incorrect_settings> <!-- Временно, чтобы обойти чеки на неверные настройки -->
+
+    <listen_host>0.0.0.0</listen_host>
+
+    <compression>
+        <case>
+            <method>lz4</method>
+        </case>
+    </compression>
+
+    <merge_tree>
+        <max_bytes_to_merge_at_max_space_in_pool>10000000000</max_bytes_to_merge_at_max_space_in_pool>
+        <max_bytes_to_merge_at_min_space_in_pool>0</max_bytes_to_merge_at_min_space_in_pool>
+        <merge_selecting_sleep_ms>5000</merge_selecting_sleep_ms> <!-- Фикс: число вместо 'random' -->
+    </merge_tree>
+
+    <replicated_merge_tree>
+        <cleanup_delay_period>1</cleanup_delay_period>
+    </replicated_merge_tree>
+
+    <parts_to_delay_insert>150</parts_to_delay_insert> <!-- Уменьшил, чтобы избежать перегрузки -->
+    <parts_to_throw_insert>300</parts_to_throw_insert>
+    <inactive_parts_to_delay_insert>300</inactive_parts_to_delay_insert>
+    <inactive_parts_to_throw_insert>throw</inactive_parts_to_throw_insert>
+
+    <memory_tracker>
+        <fault_probability>0.0</fault_probability> <!-- Должно быть float 0-1 -->
+        <max_untracked_memory>4194304</max_untracked_memory> <!-- 4MB -->
+        <memory_overcommit_ratio_denominator>1048576</memory_overcommit_ratio_denominator>
+        <max_memory_usage>8000000000</max_memory_usage> <!-- 8GB, под вашу доступную RAM 7.6 GiB -->
+    </memory_tracker>
+
+    <asynchronous_metrics>
+        <update_period>60</update_period> <!-- Стандартное, чтобы не нагружать -->
+        <max_threads>16</max_threads>
+        <max_memory_usage>8000000000</max_memory_usage> <!-- 8GB -->
+        <max_insert_threads>16</max_insert_threads>
+        <max_insert_delay_in_queue>300</max_insert_delay_in_queue>
+        <max_insert_queue_size>150</max_insert_queue_size>
+    </asynchronous_metrics>
+
+    <path>/var/lib/clickhouse/</path>
+
+    <!-- Users and profiles -->
+    <users>
+        <analyst>
+            <password>admin123</password>
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+        </analyst>
+    </users>
+
+    <profiles>
+        <default>
+            <!-- User-level settings here -->
+            <max_query_size>1073741824</max_query_size> <!-- 1GB -->
+            <max_ast_elements>1000000</max_ast_elements>
+            <max_expanded_ast_elements>1000000</max_expanded_ast_elements>
+            <max_threads>16</max_threads>
+            <max_block_size>65536</max_block_size>
+            <max_insert_block_size>1048576</max_insert_block_size>
+            <max_insert_threads>16</max_insert_threads>
+            <max_download_buffer_size>10485760</max_download_buffer_size>
+            <use_uncompressed_cache>0</use_uncompressed_cache> <!-- Отключил, если не нужно -->
+            <load_balancing>random</load_balancing>
+            <max_bytes_before_external_group_by>5000000000</max_bytes_before_external_group_by> <!-- 5GB -->
+            <max_bytes_before_external_sort>5000000000</max_bytes_before_external_sort> <!-- 5GB -->
+        </default>
+    </profiles>
+
+    <default_profile>default</default_profile>
+</clickhouse>

@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data
+data/raw/*
+data/processed/*
+data/clickhouse/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/samples/
+
+# Models
+models/registry/*
+!models/registry/.gitkeep
+*.pkl
+*.joblib
+*.h5
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+
+
+# Backups
+backups/
+
+# Reports
+reports/notebooks/*.html
+reports/dashboards/*.html
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# MCP
+mcp_agents/__pycache__/
+
+
+synth_data_10m.csv

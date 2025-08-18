@@ -1,0 +1,85 @@
+FROM quay.io/jupyter/scipy-notebook:python-3.11.9
+
+USER root
+
+# System dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    cmake \
+    git \
+    curl \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+USER ${NB_UID}
+
+# Core Data Processing
+RUN pip install --no-cache-dir \
+    pandas \
+    polars \
+    numpy \
+    pyarrow
+
+# ClickHouse Client
+RUN pip install --no-cache-dir \
+    clickhouse-driver \
+    clickhouse-connect \
+    sqlalchemy \
+    sqlalchemy-clickhouse
+
+# Analytics & ML
+RUN pip install --no-cache-dir \
+    scikit-learn \
+    xgboost \
+    statsmodels \
+    prophet \
+    pyod \
+    shap \
+    imbalanced-learn
+
+# Data Validation
+RUN pip install --no-cache-dir \
+    great-expectations \
+    pandera \
+    pydantic
+
+# Visualization
+RUN pip install --no-cache-dir \
+    plotly \
+    seaborn \
+    matplotlib \
+    dash
+
+# MCP and Claude Integration
+RUN pip install --no-cache-dir \
+    anthropic \
+    mcp \
+    langchain \
+    langchain-anthropic
+
+# Development Tools
+RUN pip install --no-cache-dir \
+    ipywidgets \
+    tqdm \
+    python-dotenv \
+    pytest \
+    black \
+    pylint \
+    loguru
+
+# Jupyter Extensions
+RUN pip install --no-cache-dir \
+    jupyterlab-git \
+    jupyterlab-lsp \
+    jupyter-ai
+
+
+
+WORKDIR /workspace
+
+# Set Python path
+ENV PYTHONPATH=/workspace:${PYTHONPATH:-}
+
+USER ${NB_UID}
