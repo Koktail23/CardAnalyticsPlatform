@@ -36,6 +36,7 @@ logs/
 
 # Environment
 .env
+.env.example
 .env.local
 .env.*.local
 
@@ -71,3 +72,15 @@ mcp_agents/__pycache__/
 
 
 synth_data_10m.csv
+
+*.csv
+*.parquet
+*.json
+*.png
+
+# Data & reports & artifacts
+data/
+reports/
+mlruns/
+ml/mlruns/
+ml/ml/
